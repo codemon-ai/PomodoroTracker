@@ -1,12 +1,14 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { playNotification } from "@/lib/audio";
 import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 
 export function useTimer(initialMinutes = 25) {
   const [minutes, setMinutes] = useState(initialMinutes);
   const [secondsLeft, setSecondsLeft] = useState(minutes * 60);
   const [isRunning, setIsRunning] = useState(false);
-  const intervalRef = useRef<number>();
+  const [currentSessionId, setCurrentSessionId] = useState<number | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout>();
   const { toast } = useToast();
 
   const cleanup = useCallback(() => {
@@ -20,6 +22,19 @@ export function useTimer(initialMinutes = 25) {
     return cleanup;
   }, [cleanup]);
 
+  const completeSession = useCallback(async () => {
+    if (currentSessionId) {
+      try {
+        await apiRequest(
+          'POST',
+          `/api/pomodoro-sessions/${currentSessionId}/complete`
+        );
+      } catch (error) {
+        console.error('Failed to complete session:', error);
+      }
+    }
+  }, [currentSessionId]);
+
   useEffect(() => {
     if (!isRunning) return;
 
@@ -29,6 +44,7 @@ export function useTimer(initialMinutes = 25) {
           cleanup();
           setIsRunning(false);
           playNotification();
+          completeSession();
           toast({
             title: "Time's up!",
             description: "Your pomodoro session has ended.",
@@ -40,23 +56,48 @@ export function useTimer(initialMinutes = 25) {
     }, 1000);
 
     return cleanup;
-  }, [isRunning, cleanup, toast]);
+  }, [isRunning, cleanup, toast, completeSession]);
 
-  const start = useCallback(() => {
-    if (secondsLeft === 0) {
-      setSecondsLeft(minutes * 60);
+  const start = useCallback(async () => {
+    try {
+      const res = await apiRequest('POST', '/api/pomodoro-sessions', {
+        minutes,
+        startedAt: new Date().toISOString(),
+      });
+      const session = await res.json();
+      setCurrentSessionId(session.id);
+
+      if (secondsLeft === 0) {
+        setSecondsLeft(minutes * 60);
+      }
+      setIsRunning(true);
+    } catch (error) {
+      console.error('Failed to start session:', error);
+      toast({
+        title: "Error",
+        description: "Failed to start timer session",
+        variant: "destructive",
+      });
     }
-    setIsRunning(true);
-  }, [minutes, secondsLeft]);
+  }, [minutes, secondsLeft, toast]);
 
-  const pause = useCallback(() => {
+  const pause = useCallback(async () => {
     setIsRunning(false);
-  }, []);
+    if (currentSessionId) {
+      try {
+        await completeSession();
+        setCurrentSessionId(null);
+      } catch (error) {
+        console.error('Failed to pause session:', error);
+      }
+    }
+  }, [currentSessionId, completeSession]);
 
   const reset = useCallback(() => {
     cleanup();
     setIsRunning(false);
     setSecondsLeft(minutes * 60);
+    setCurrentSessionId(null);
   }, [minutes, cleanup]);
 
   const updateMinutes = useCallback((newMinutes: number) => {
