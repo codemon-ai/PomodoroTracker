@@ -1,6 +1,7 @@
 import { CircularTimer } from "@/components/timer/circular-timer";
 import { TimerControls } from "@/components/timer/timer-controls";
 import { TimeInput } from "@/components/timer/time-input";
+import { SoundSelector } from "@/components/timer/sound-selector";
 import { useTimer } from "@/hooks/use-timer";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -26,13 +27,19 @@ export default function Home() {
               timeLeft={timer.timeLeft}
               size={300}
             />
-            
-            <TimerControls
-              isRunning={timer.isRunning}
-              onStart={timer.start}
-              onPause={timer.pause}
-              onReset={timer.reset}
-            />
+
+            <div className="flex items-center gap-4">
+              <TimerControls
+                isRunning={timer.isRunning}
+                onStart={timer.start}
+                onPause={timer.pause}
+                onReset={timer.reset}
+              />
+              <SoundSelector
+                currentSound={timer.soundType}
+                onSoundChange={timer.setSoundType}
+              />
+            </div>
 
             <TimeInput
               minutes={timer.minutes}

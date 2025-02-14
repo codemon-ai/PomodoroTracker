@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { playNotification } from "@/lib/audio";
+import { playNotification, type SoundType } from "@/lib/audio";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -8,6 +8,7 @@ export function useTimer(initialMinutes = 25) {
   const [secondsLeft, setSecondsLeft] = useState(minutes * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [currentSessionId, setCurrentSessionId] = useState<number | null>(null);
+  const [soundType, setSoundType] = useState<SoundType>('bell');
   const intervalRef = useRef<NodeJS.Timeout>();
   const { toast } = useToast();
 
@@ -43,7 +44,7 @@ export function useTimer(initialMinutes = 25) {
         if (prev <= 1) {
           cleanup();
           setIsRunning(false);
-          playNotification();
+          playNotification(soundType);
           completeSession();
           toast({
             title: "Time's up!",
@@ -56,7 +57,7 @@ export function useTimer(initialMinutes = 25) {
     }, 1000);
 
     return cleanup;
-  }, [isRunning, cleanup, toast, completeSession]);
+  }, [isRunning, cleanup, toast, completeSession, soundType]);
 
   const start = useCallback(async () => {
     try {
@@ -115,9 +116,11 @@ export function useTimer(initialMinutes = 25) {
     progress,
     isRunning,
     minutes,
+    soundType,
     start,
     pause,
     reset,
     setMinutes: updateMinutes,
+    setSoundType,
   };
 }
