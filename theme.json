@@ -2,7 +2,7 @@
   "variant": "vibrant",
   "primary": "346 84% 61%",
   "appearance": "system",
-  "radius": 1.0,
+  "radius": 0.5,
   "themes": {
     "pink": {
       "primary": "339 90% 63%"

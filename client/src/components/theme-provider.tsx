@@ -25,7 +25,9 @@ export function ThemeProvider({
   children,
   defaultTheme = "system",
 }: ThemeProviderProps) {
-  const [theme, setTheme] = React.useState<Theme>(defaultTheme);
+  const [theme, setTheme] = React.useState<Theme>(
+    () => (localStorage.getItem("theme") as Theme) || defaultTheme
+  );
 
   React.useEffect(() => {
     const root = window.document.documentElement;
@@ -48,12 +50,8 @@ export function ThemeProvider({
   const value = {
     theme,
     setTheme: (theme: Theme) => {
+      localStorage.setItem("theme", theme);
       setTheme(theme);
-      try {
-        localStorage.setItem("theme", theme);
-      } catch (e) {
-        console.error(e);
-      }
     },
   };
 
