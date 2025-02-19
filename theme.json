@@ -1,20 +1,20 @@
 {
   "variant": "vibrant",
-  "primary": "#FF4081",
+  "primary": "346 84% 61%",
   "appearance": "system",
   "radius": 1.0,
   "themes": {
     "pink": {
-      "primary": "#FF4081"
+      "primary": "339 90% 63%"
     },
     "blue": {
-      "primary": "#2196F3"
+      "primary": "207 90% 54%"
     },
     "green": {
-      "primary": "#4CAF50"
+      "primary": "122 39% 49%"
     },
     "purple": {
-      "primary": "#9C27B0"
+      "primary": "291 72% 42%"
     }
   }
 }
