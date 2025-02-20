@@ -2,6 +2,9 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { playNotification, type SoundType } from "@/lib/audio";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import NoSleep from 'nosleep.js';
+
+const noSleep = new NoSleep();
 
 export function useTimer(initialMinutes = 25) {
   const [minutes, setMinutes] = useState(initialMinutes);
@@ -38,6 +41,7 @@ export function useTimer(initialMinutes = 25) {
 
   useEffect(() => {
     if (!isRunning) return;
+    noSleep.enable(); // Enable NoSleep when timer starts
 
     intervalRef.current = setInterval(() => {
       setSecondsLeft((prev) => {
@@ -84,6 +88,7 @@ export function useTimer(initialMinutes = 25) {
 
   const pause = useCallback(async () => {
     setIsRunning(false);
+    noSleep.disable(); // Disable NoSleep when timer pauses
     if (currentSessionId) {
       try {
         await completeSession();
@@ -97,6 +102,7 @@ export function useTimer(initialMinutes = 25) {
   const reset = useCallback(() => {
     cleanup();
     setIsRunning(false);
+    noSleep.disable(); //Disable NoSleep when timer resets
     setSecondsLeft(minutes * 60);
     setCurrentSessionId(null);
   }, [minutes, cleanup]);
