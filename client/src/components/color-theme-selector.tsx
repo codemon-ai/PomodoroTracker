@@ -28,13 +28,7 @@ export function ColorThemeSelector({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          style={{
-            color: `hsl(${COLOR_THEMES[currentTheme].hsl})`,
-          }}
-        >
+        <Button variant="outline" size="icon">
           <Palette className="h-[1.2rem] w-[1.2rem]" />
           <span className="sr-only">컬러 테마 선택</span>
         </Button>

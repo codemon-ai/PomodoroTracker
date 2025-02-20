@@ -26,16 +26,19 @@ const COLOR_THEMES = {
 };
 
 function App() {
-  const [colorTheme, setColorTheme] = useState<ColorTheme>("pink");
+  const [colorTheme, setColorTheme] = useState<ColorTheme>(() => 
+    (localStorage.getItem("colorTheme") as ColorTheme) || "pink"
+  );
 
   useEffect(() => {
     const root = document.documentElement;
     root.style.setProperty('--primary', COLOR_THEMES[colorTheme].hsl);
+    localStorage.setItem("colorTheme", colorTheme);
   }, [colorTheme]);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="system">
+      <ThemeProvider defaultTheme="system" attribute="class">
         <div className="min-h-screen bg-background text-foreground">
           <div className="fixed top-4 right-4 z-50 flex gap-2">
             <ColorThemeSelector
