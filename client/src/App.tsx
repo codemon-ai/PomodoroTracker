@@ -19,7 +19,7 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="light">
+      <ThemeProvider defaultTheme="dark">
         <div className="min-h-screen bg-background text-foreground">
           <div className="fixed top-4 right-4 z-50">
             <ThemeToggle />
