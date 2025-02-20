@@ -1,20 +1,20 @@
 {
-  "variant": "default",
-  "primary": "hsl(339 90% 63%)",
+  "variant": "professional",
+  "primary": "339 90% 63%",
   "appearance": "system",
-  "radius": 0.5,
+  "radius": 0.75,
   "themes": {
     "pink": {
-      "primary": "hsl(339 90% 63%)"
+      "primary": "339 90% 63%"
     },
     "blue": {
-      "primary": "hsl(207 90% 54%)"
+      "primary": "207 90% 54%"
     },
     "green": {
-      "primary": "hsl(122 39% 49%)"
+      "primary": "122 39% 49%"
     },
     "purple": {
-      "primary": "hsl(291 72% 42%)"
+      "primary": "291 72% 42%"
     }
   }
 }

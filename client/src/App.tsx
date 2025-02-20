@@ -31,14 +31,13 @@ function App() {
   );
 
   useEffect(() => {
-    const root = document.documentElement;
-    root.style.setProperty('--primary', COLOR_THEMES[colorTheme].hsl);
+    document.documentElement.style.setProperty('--primary', COLOR_THEMES[colorTheme].hsl);
     localStorage.setItem("colorTheme", colorTheme);
   }, [colorTheme]);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="system" attribute="class">
+      <ThemeProvider defaultTheme="system">
         <div className="min-h-screen bg-background text-foreground">
           <div className="fixed top-4 right-4 z-50 flex gap-2">
             <ColorThemeSelector
